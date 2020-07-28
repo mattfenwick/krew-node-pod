@@ -33,21 +33,26 @@ In [the plugin.yaml file](./deploy/krew/plugin.yaml):
 
 # How to test a local release
 
-1. download a binary from [the github project release page](https://github.com/mattfenwick/krew-node-pod/releases/tag/v0.0.3)
+1. Choose one of the following:
 
-2. run a `krew install` against the downloaded binary
+     - easy way: `kubectl krew install --manifest=./deploy/krew/plugin.yaml`
 
-    ```
-    kubectl krew install --manifest=./deploy/krew/plugin.yaml --archive=/Users/mfenwick/Downloads/node-pod_darwin_amd64.tar.gz
-    ```
+     - hard way:
+        1. download a binary from [the github project release page](https://github.com/mattfenwick/krew-node-pod/releases/tag/v0.0.3)
 
-3. test it
+        2. run a `krew install` against the downloaded binary
+
+            ```
+            kubectl krew install --manifest=./deploy/krew/plugin.yaml --archive=/Users/mfenwick/Downloads/node-pod_darwin_amd64.tar.gz
+            ```
+
+2. test it
 
     ```
     kubectl node-pod
     ```
 
-4. clean up
+3. clean up
 
     ```
     kubectl krew uninstall node-pod
