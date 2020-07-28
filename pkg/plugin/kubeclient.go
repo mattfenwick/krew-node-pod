@@ -9,7 +9,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
-	_ "k8s.io/client-go/plugin/pkg/client/auth" // required for auth, see: https://github.com/kubernetes/client-go/tree/v0.17.3/plugin/pkg/client/auth
+	// required for auth, see: https://github.com/kubernetes/client-go/tree/v0.17.3/plugin/pkg/client/auth
+	_ "k8s.io/client-go/plugin/pkg/client/auth"
 	"k8s.io/client-go/tools/clientcmd"
 )
 
@@ -33,6 +34,13 @@ func NewDefaultClient() (*Client, error) {
 	return NewClient(kubeConfigPath)
 }
 
+func NewClientWithDefaultKubeConfigFallback(kubeConfigPath string) (*Client, error) {
+	if kubeConfigPath == "" {
+		return NewDefaultClient()
+	}
+	return NewClient(kubeConfigPath)
+}
+
 func NewClient(kubeConfigPath string) (*Client, error) {
 	log.Debugf("instantiating k8s client from config path: '%s'", kubeConfigPath)
 	kubeConfig, err := clientcmd.BuildConfigFromFlags("", kubeConfigPath)
@@ -52,4 +60,9 @@ func NewClient(kubeConfigPath string) (*Client, error) {
 func (kc *Client) ListPods(namespace string) (*v1.PodList, error) {
 	pods, err := kc.client.CoreV1().Pods(namespace).List(metav1.ListOptions{})
 	return pods, errors.Wrapf(err, "unable to list pods in ns '%s'", namespace)
+}
+
+func (kc *Client) ListNodes() (*v1.NodeList, error) {
+	nodes, err := kc.client.CoreV1().Nodes().List(metav1.ListOptions{})
+	return nodes, errors.Wrapf(err, "unable to list nodes")
 }
