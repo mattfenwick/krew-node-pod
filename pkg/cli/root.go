@@ -20,10 +20,6 @@ import (
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 )
 
-var (
-	KubernetesConfigFlags *genericclioptions.ConfigFlags
-)
-
 func doOrDie(err error) {
 	if err != nil {
 		log.Fatalf("%+v", err)
@@ -50,6 +46,8 @@ func setupRootCmd() *cobra.Command {
 		},
 	}
 
+	cmd.Flags().StringVar(&args.LogLevel, "v", "info", "log level")
+
 	args.KubeFlags = genericclioptions.NewConfigFlags(false)
 	args.KubeFlags.AddFlags(cmd.Flags())
 
@@ -64,6 +62,10 @@ func InitAndExecute() {
 }
 
 func runRootCmd(args *Config) {
+	level, err := log.ParseLevel(args.LogLevel)
+	doOrDie(err)
+	log.SetLevel(level)
+
 	// TODO use args
 	ListPods()
 }
@@ -92,6 +94,12 @@ func ListPods() {
 
 	for _, node := range nodes {
 		pods := nodeToPods[node]
+		sort.Slice(pods, func(i, j int) bool {
+			if pods[i].Namespace != pods[j].Namespace {
+				return pods[i].Namespace < pods[j].Namespace
+			}
+			return pods[i].Name < pods[j].Name
+		})
 		fmt.Printf("%s:\n", node)
 		for _, pod := range pods {
 			fmt.Printf(" - %s/%s\n", pod.Namespace, pod.Name)
