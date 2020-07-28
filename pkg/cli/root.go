@@ -41,6 +41,9 @@ func setupRootCmd() *cobra.Command {
 		SilenceErrors: true,
 		SilenceUsage:  true,
 		RunE: func(cmd *cobra.Command, as []string) error {
+			// TODO detect whether this is running under kubectl or not, and modify help message accordingly
+			//   see https://krew.sigs.k8s.io/docs/developer-guide/develop/best-practices/#auth-plugins
+			//   if strings.HasPrefix(filepath.Base(os.Args[0]), "kubectl-") { }
 			runRootCmd(args)
 			return nil
 		},
