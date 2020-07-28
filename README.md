@@ -35,7 +35,7 @@ In [the plugin.yaml file](./deploy/krew/plugin.yaml):
 
 1. Choose one of the following:
 
-     - easy way: `kubectl krew install --manifest=./deploy/krew/plugin.yaml`
+     - easy way: `kubectl krew install --manifest=./deploy/krew/node-pod.yaml`
 
      - hard way:
         1. download a binary from [the github project release page](https://github.com/mattfenwick/krew-node-pod/releases/tag/v0.0.3)
@@ -43,7 +43,7 @@ In [the plugin.yaml file](./deploy/krew/plugin.yaml):
         2. run a `krew install` against the downloaded binary
 
             ```
-            kubectl krew install --manifest=./deploy/krew/plugin.yaml --archive=/Users/mfenwick/Downloads/node-pod_darwin_amd64.tar.gz
+            kubectl krew install --manifest=./deploy/krew/node-pod.yaml --archive=/Users/mfenwick/Downloads/node-pod_darwin_amd64.tar.gz
             ```
 
 2. test it
