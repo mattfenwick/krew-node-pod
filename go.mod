@@ -1,4 +1,4 @@
-module github.com/replicatedhq/krew-plugin-template
+module github.com/mattfenwick/krew-node-pod
 
 go 1.12
 

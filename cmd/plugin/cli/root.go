@@ -6,8 +6,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/{{ .Owner }}/{{ .Repo }}/pkg/logger"
-	"github.com/{{ .Owner }}/{{ .Repo }}/pkg/plugin"
+	"github.com/mattfenwick/krew-node-pod/pkg/logger"
+	"github.com/mattfenwick/krew-node-pod/pkg/plugin"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -21,7 +21,7 @@ var (
 
 func RootCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:           "{{ .PluginName }}",
+		Use:           "node-pod",
 		Short:         "",
 		Long:          `.`,
 		SilenceErrors: true,

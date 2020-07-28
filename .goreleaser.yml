@@ -1,10 +1,10 @@
-project_name: {{ .PluginName }}
+project_name: node-pod
 release:
   github:
-    owner: {{ .Owner }}
-    name: {{ .Repo }}
+    owner: mattfenwick
+    name: krew-node-pod
 builds:
-  - id: {{ .PluginName }}
+  - id: node-pod
     goos:
     - linux
     - windows
@@ -17,12 +17,12 @@ builds:
       - GO111MODULE=on
     main: cmd/plugin/main.go
     ldflags: -s -w
-      -X github.com/{{ .Owner }}/{{ .Repo }}/pkg/version.version=
+      -X github.com/mattfenwick/krew-node-pod/pkg/version.version=
 archives:
-  - id: {{ .PluginName }}
+  - id: node-pod
     builds:
-    - {{ .PluginName }}
-    name_template: {{ `"{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"` }}
+    - node-pod
+    name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
     format_overrides:
     - goos: windows
       format: zip
