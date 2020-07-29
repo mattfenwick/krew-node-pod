@@ -4,7 +4,7 @@ release:
     owner: mattfenwick
     name: krew-node-pod
 builds:
-  - id: node-pod
+  - id: node_pod
     goos:
     - linux
     - windows
@@ -19,9 +19,9 @@ builds:
     ldflags: -s -w
       -X github.com/mattfenwick/krew-node-pod/pkg/version.version=
 archives:
-  - id: node-pod
+  - id: node_pod
     builds:
-    - node-pod
+    - node_pod
     name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
     format_overrides:
     - goos: windows

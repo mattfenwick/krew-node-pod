@@ -1,8 +1,45 @@
-# node-pod kubectl
+# kubectl node-pod
 
 A `kubectl` plugin to show the assignment of pods to nodes.
 
+```
+kubectl node-pod --format table --status
++----------------------+--------------------+----------------------------------------------+---------+
+|         NODE         |     NAMESPACE      |                   POD NAME                   | STATUS  |
++----------------------+--------------------+----------------------------------------------+---------+
+| calico-control-plane |                    |                                              | Ready   |
+|                      | kube-system        | calico-node-qfcqs                            | Running |
+|                      | kube-system        | etcd-calico-control-plane                    | Running |
+|                      | kube-system        | kube-apiserver-calico-control-plane          | Running |
+|                      | kube-system        | kube-controller-manager-calico-control-plane | Running |
+|                      | kube-system        | kube-proxy-9wn87                             | Running |
+|                      | kube-system        | kube-scheduler-calico-control-plane          | Running |
+| calico-worker        |                    |                                              | Ready   |
+|                      | kube-system        | calico-kube-controllers-857b8b787f-wpj29     | Running |
+|                      | kube-system        | calico-node-tpphd                            | Running |
+|                      | kube-system        | coredns-66bff467f8-2nwsr                     | Running |
+|                      | kube-system        | kube-proxy-fphtj                             | Running |
+|                      | sonobuoy-3         | sonobuoy                                     | Running |
+|                      | sonobuoy-4         | sonobuoy                                     | Running |
+| calico-worker2       |                    |                                              | Ready   |
+|                      | kube-system        | calico-node-qvdqd                            | Running |
+|                      | kube-system        | coredns-66bff467f8-nnggj                     | Running |
+|                      | kube-system        | kube-proxy-bzcwf                             | Running |
+|                      | local-path-storage | local-path-provisioner-bd4bb6b75-dcr9g       | Running |
+|                      | sonobuoy-5         | sonobuoy                                     | Running |
++----------------------+--------------------+----------------------------------------------+---------+
+```
+
 ## Quick Start
+
+Download the [latest binary for your OS](https://github.com/mattfenwick/krew-node-pod/releases), move the executable
+somewhere in your path, and invoke it with
+
+```
+kubectl node-pod
+```
+
+or TODO add to krew:
 
 ```
 kubectl krew install node-pod

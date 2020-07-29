@@ -6,17 +6,14 @@ The following assumes you have the plugin installed via
 kubectl krew install node-pod
 ```
 
-### Scan images in your current kubecontext
+### See node assignments for all pods
 
 ```shell
 kubectl node-pod
 ```
 
-### Scan images in another kubecontext
+### See node assignments for pods in a namespace
 
 ```shell
-kubectl node-pod --context=context-name
+kubectl node-pod -n myns
 ```
-
-## How it works
-Write a brief description of your plugin here.
