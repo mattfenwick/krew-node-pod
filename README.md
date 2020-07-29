@@ -73,9 +73,9 @@ goreleaser
 ```
 
 In [the plugin.yaml file](./deploy/krew/plugin.yaml):
- - manually update the sha256's using [the checksums file](https://github.com/mattfenwick/krew-node-pod/releases/download/v0.0.3/node-pod_0.0.3_checksums.txt)
+ - manually update the sha256's using [the checksums file](https://github.com/mattfenwick/krew-node-pod/releases/download/v0.1.0/node-pod_0.0.3_checksums.txt)
    - **TODO** is there a better way to do this?
- - manually update the versions using [the checksums file](https://github.com/mattfenwick/krew-node-pod/releases/download/v0.0.3/node-pod_0.0.3_checksums.txt)
+ - manually update the versions using [the checksums file](https://github.com/mattfenwick/krew-node-pod/releases/download/v0.1.0/node-pod_0.0.3_checksums.txt)
    - **TODO** is there a better way to do this?
 
 # How to test a local release
@@ -85,7 +85,7 @@ In [the plugin.yaml file](./deploy/krew/plugin.yaml):
      - easy way: `kubectl krew install --manifest=./deploy/krew/node-pod.yaml`
 
      - hard way:
-        1. download a binary from [the github project release page](https://github.com/mattfenwick/krew-node-pod/releases/tag/v0.0.3)
+        1. download a binary from [the github project release page](https://github.com/mattfenwick/krew-node-pod/releases/tag/v0.1.0)
 
         2. run a `krew install` against the downloaded binary
 

@@ -10,10 +10,10 @@ spec:
         os: linux
         arch: amd64
     uri: https://github.com/mattfenwick/krew-node-pod/releases/download/v0.1.0/kubectl-node_pod_linux_amd64.tar.gz
-    sha256: "d4072e0a9435dbed7075e8cb478741ab7d24e6184cefec6a865d7f782b2d2fc7"
+    sha256: "c21488a37c7a29b43c22cf078c772858f1380d7836eaddeaf34a171fa405a821"
     files:
-    - from: "./node-pod"
-      to: "."
+    - from: "./kubectl-node_pod"
+      to: "node-pod"
     - from: LICENSE
       to: "."
     bin: "node-pod"
@@ -22,10 +22,10 @@ spec:
         os: darwin
         arch: amd64
     uri: https://github.com/mattfenwick/krew-node-pod/releases/download/v0.1.0/kubectl-node_pod_darwin_amd64.tar.gz
-    sha256: "42f32d1d029a5c0f898fee27a3049213392caf83fd3be5f93364685388e44295"
+    sha256: "1a7357f9532dd0cae163a938f0bde483567093f489b508547fac4bccdc725306"
     files:
-    - from: "./node-pod"
-      to: "."
+    - from: "./kubectl-node_pod"
+      to: "node-pod"
     - from: LICENSE
       to: "."
     bin: "node-pod"
@@ -34,10 +34,10 @@ spec:
         os: windows
         arch: amd64
     uri: https://github.com/mattfenwick/krew-node-pod/releases/download/v0.1.0/kubectl-node_pod_windows_amd64.zip
-    sha256: "b85d4e550946a053801bce0c208c1afc47109c0ab6e17d86efd9727d37a942b9"
+    sha256: "fde3fc66ffb7f0128748a4156ce26bbaf02d63fa9cc9d7d5f6bccc33bda7b8f3"
     files:
-    - from: "/node-pod.exe"
-      to: "."
+    - from: "/kubectl-node_pod.exe"
+      to: "node-pod.exe"
     - from: LICENSE
       to: "."
     bin: "node-pod.exe"
