@@ -34,6 +34,7 @@ type Config struct {
 	KubeFlags      *genericclioptions.ConfigFlags
 	ShowContainers bool
 	Format         string
+	ShowStatus     bool
 }
 
 func setupRootCmd() *cobra.Command {
@@ -55,9 +56,11 @@ func setupRootCmd() *cobra.Command {
 
 	cmd.Flags().StringVar(&args.LogLevel, "v", "info", "log level")
 
-	cmd.Flags().StringVar(&args.Format, "format", "list", "output format: one of json, list, table")
+	cmd.Flags().StringVar(&args.Format, "format", "table", "output format: one of json, list, table")
 
 	cmd.Flags().BoolVarP(&args.ShowContainers, "containers", "c", false, "if true, print containers")
+
+	cmd.Flags().BoolVar(&args.ShowStatus, "status", true, "if true, print object status (only works with list and table formats)")
 
 	args.KubeFlags = genericclioptions.NewConfigFlags(false)
 	args.KubeFlags.AddFlags(cmd.Flags())
@@ -82,11 +85,11 @@ func runRootCmd(args *Config) {
 
 	switch args.Format {
 	case "list":
-		fmt.Println(output.List())
+		fmt.Println(output.List(args.ShowStatus))
 	case "json":
 		fmt.Println(output.Json())
 	case "table":
-		output.Table().Render()
+		output.Table(args.ShowContainers, args.ShowStatus).Render()
 	default:
 		doOrDie(errors.Errorf("invalid format '%s'", args.Format))
 	}
@@ -138,18 +141,45 @@ func (o *Output) Json() string {
 	return string(bytes)
 }
 
-func (o *Output) Table() *tablewriter.Table {
+func (o *Output) Table(showContainers bool, showStatus bool) *tablewriter.Table {
 	table := tablewriter.NewWriter(os.Stdout)
-	table.SetHeader([]string{"Node", "Namespace", "Pod Name", "Container", "Status"})
+	headers := []string{"Node", "Namespace", "Pod Name"}
+	if showContainers {
+		headers = append(headers, "Container")
+	}
+	if showStatus {
+		headers = append(headers, "Status")
+	}
+	table.SetHeader(headers)
 
 	for _, node := range o.Nodes {
-		table.Append([]string{node.Name, "", "", "", node.Status})
+		nodeLine := []string{node.Name, "", ""}
+		if showContainers {
+			nodeLine = append(nodeLine, "")
+		}
+		if showStatus {
+			nodeLine = append(nodeLine, node.Status)
+		}
+		table.Append(nodeLine)
 
 		for _, pod := range node.Pods {
-			table.Append([]string{"", pod.Namespace, pod.Name, "", pod.Status})
+			podLine := []string{"", pod.Namespace, pod.Name}
+			if showContainers {
+				podLine = append(podLine, "")
+			}
+			if showStatus {
+				podLine = append(podLine, pod.Status)
+			}
+			table.Append(podLine)
 
-			for _, container := range pod.Containers {
-				table.Append([]string{"", "", "", container.Name, container.Status})
+			if showContainers {
+				for _, container := range pod.Containers {
+					contLine := []string{"", "", "", container.Name}
+					if showStatus {
+						contLine = append(contLine, container.Status)
+					}
+					table.Append(contLine)
+				}
 			}
 		}
 	}
@@ -157,14 +187,26 @@ func (o *Output) Table() *tablewriter.Table {
 	return table
 }
 
-func (o *Output) List() string {
+func (o *Output) List(showStatus bool) string {
 	var lines []string
 	for _, node := range o.Nodes {
-		lines = append(lines, fmt.Sprintf("%s: %s", node.Name, node.Status))
+		if showStatus {
+			lines = append(lines, fmt.Sprintf("%s: %s", node.Name, node.Status))
+		} else {
+			lines = append(lines, fmt.Sprintf("%s", node.Name))
+		}
 		for _, pod := range node.Pods {
-			lines = append(lines, fmt.Sprintf(" - %s/%s: %s", pod.Namespace, pod.Name, pod.Status))
+			if showStatus {
+				lines = append(lines, fmt.Sprintf(" - %s/%s: %s", pod.Namespace, pod.Name, pod.Status))
+			} else {
+				lines = append(lines, fmt.Sprintf(" - %s/%s", pod.Namespace, pod.Name))
+			}
 			for _, container := range pod.Containers {
-				lines = append(lines, fmt.Sprintf("   - %s: %s", container.Name, container.Status))
+				if showStatus {
+					lines = append(lines, fmt.Sprintf("   - %s: %s", container.Name, container.Status))
+				} else {
+					lines = append(lines, fmt.Sprintf("   - %s", container.Name))
+				}
 			}
 		}
 		lines = append(lines, "")
@@ -176,6 +218,10 @@ type Node struct {
 	Name   string
 	Pods   []*Pod
 	Status string
+}
+
+func (n *Node) AddPod(pod *Pod) {
+	n.Pods = append(n.Pods, pod)
 }
 
 type Pod struct {
@@ -220,10 +266,15 @@ func FetchKubeData(client *plugin.Client, namespace string) (*Output, error) {
 		nodeName := kubePod.Spec.NodeName
 		node, ok := nodes[nodeName]
 		if !ok {
-			return nil, errors.Errorf("pod %s/%s assigned to node %s -- but node not found in kube", kubePod.Namespace, kubePod.Name, nodeName)
+			node = &Node{
+				Name:   nodeName,
+				Pods:   nil,
+				Status: "Unknown",
+			}
+			nodes[nodeName] = node
+			log.Warnf("pod %s/%s assigned to node %s -- but node not found in kube", kubePod.Namespace, kubePod.Name, nodeName)
 		}
-		// TODO methodize this
-		node.Pods = append(node.Pods, extractPod(&kubePod))
+		node.AddPod(extractPod(&kubePod))
 	}
 
 	return NewOutput(nodes), err
@@ -243,13 +294,13 @@ func extractPod(kubePod *v1.Pod) *Pod {
 }
 
 func extractContainer(kubeContainer *v1.ContainerStatus) *Container {
-	state := "unknown"
+	state := "Unknown"
 	if kubeContainer.State.Running != nil {
-		state = "running"
+		state = "Running"
 	} else if kubeContainer.State.Terminated != nil {
-		state = "terminated"
+		state = "Terminated"
 	} else if kubeContainer.State.Waiting != nil {
-		state = "waiting"
+		state = "Waiting"
 	}
 	return &Container{
 		Name:   kubeContainer.Name,
