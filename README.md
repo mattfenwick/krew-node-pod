@@ -32,12 +32,22 @@ kubectl node-pod --format table --status
 
 ## Quick Start
 
-Download the [latest binary for your OS](https://github.com/mattfenwick/krew-node-pod/releases), move the executable
-somewhere in your path, and invoke it with
+1. Download the [latest binary for your OS](https://github.com/mattfenwick/krew-node-pod/releases)
 
-```
-kubectl node-pod
-```
+2. unzip the archive
+
+3. move the executable somewhere in your path
+
+    ```bash
+    # OS X example;  will be different on other OSs
+    mv ~/Downloads/kubectl-node_pod_darwin_amd64/kubectl-node_pod /usr/local/bin
+    ```
+
+4. run it!
+
+    ```
+    kubectl node-pod
+    ```
 
 or TODO add to krew:
 

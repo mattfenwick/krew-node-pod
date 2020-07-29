@@ -1,10 +1,10 @@
-project_name: node-pod
+project_name: kubectl-node_pod
 release:
   github:
     owner: mattfenwick
     name: krew-node-pod
 builds:
-  - id: node_pod
+  - id: kubectl-node_pod
     goos:
     - linux
     - windows
@@ -19,9 +19,9 @@ builds:
     ldflags: -s -w
       -X github.com/mattfenwick/krew-node-pod/pkg/version.version=
 archives:
-  - id: node_pod
+  - id: kubectl-node_pod
     builds:
-    - node_pod
+    - kubectl-node_pod
     name_template: "{{ .ProjectName }}_{{ .Os }}_{{ .Arch }}"
     format_overrides:
     - goos: windows
