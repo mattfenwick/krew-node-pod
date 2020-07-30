@@ -49,13 +49,6 @@ kubectl node-pod --format table --status
     kubectl node-pod
     ```
 
-or TODO add to krew:
-
-```
-kubectl krew install node-pod
-kubectl node-pod
-```
-
 # How to release
 
 See https://goreleaser.com/quick-start/
@@ -104,3 +97,13 @@ In [the plugin.yaml file](./deploy/krew/plugin.yaml):
     ```
     kubectl krew uninstall node-pod
     ```
+    
+# Coming soon!  (Maybe)  (Or not, we'll see :) )
+
+
+Add to krew:
+
+```
+kubectl krew install node-pod
+kubectl node-pod
+```
