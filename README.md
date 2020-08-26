@@ -71,7 +71,7 @@ In [the plugin.yaml file](./deploy/krew/plugin.yaml):
  - manually update the versions using [the checksums file](https://github.com/mattfenwick/krew-node-pod/releases/download/v0.1.0/node-pod_0.0.3_checksums.txt)
    - **TODO** is there a better way to do this?
 
-# How to test a local release
+# How to test a local krew release
 
 1. Choose one of the following:
 
@@ -97,13 +97,3 @@ In [the plugin.yaml file](./deploy/krew/plugin.yaml):
     ```
     kubectl krew uninstall node-pod
     ```
-    
-# Coming soon!  (Maybe)  (Or not, we'll see :) )
-
-
-Add to krew:
-
-```
-kubectl krew install node-pod
-kubectl node-pod
-```
